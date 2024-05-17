@@ -1,0 +1,106 @@
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+//initialasing all type of letters in password
+string letters_under = "abcdefghijklmnopqrstuvwxyz";
+string extra_symbolds = "!@#$%^&*()-_=+[{]};:\\<>?/";
+
+//creating free password without anything in it
+string password = "                    ";
+
+string up_letters(string letters_under) {
+
+	string str = letters_under;
+
+	//this loop makes elements of string as upper letters, example: "abc"->"ABC"
+	for (int i = 0; i < letters_under.size(); ++i) {
+
+		str[i] = toupper(letters_under[i]);
+	}
+
+	return str;
+}
+
+string creating_password(string all,string password) {
+	
+	//all 20 letters being filled with randam numbers from all types of letters
+	for (int i = 0; i < 20; i++) {
+
+		password[i] = all[rand()%all.size()+1];
+	}
+
+	//entering 4 random letters in password
+	for (int i = 0; i < 4; i++) {
+
+		int index = rand() % password.size();
+		password[index] = to_string(rand() % 10)[0];
+	}
+
+	return password;
+}
+
+
+
+void enter_file(string password,string what_for) {
+
+	ofstream file("passwords.txt", ofstream::app);
+
+	file << endl;
+	file << what_for << ": " << password;
+	file.close();
+}
+
+void show_all() {
+	ifstream file("passwords.txt");
+
+	string info;
+
+	while (getline(file,info)) {
+		cout << info << endl;
+	}
+}
+
+
+void creating_new_pass(string all) {
+	string what_for;
+
+	password = creating_password(all, password);
+
+	cout << "what for will be password ";
+	cin >> what_for;
+
+	cout << endl;
+	cout << what_for << ": " << password << endl;
+
+	enter_file(password, what_for);
+	
+}
+
+
+int main() {
+
+	srand(time(nullptr));
+
+	string all = letters_under + up_letters(letters_under) + extra_symbolds;
+	string type;
+
+	cout << "Hi, it is password creator by Cessna" << endl<<endl;
+	cout << "enter new one to file       show all"<<endl;
+	cout << "     'new'                   'show'"<<endl<<endl<<endl;
+
+	cin >> type;
+	
+	system("cls");
+
+	if (type == "new") {
+		creating_new_pass(all);
+	}
+
+	else if (type == "show") {
+		show_all();
+	}
+}
